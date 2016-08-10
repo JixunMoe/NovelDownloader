@@ -1,0 +1,45 @@
+﻿<Window x:Class="moe.Jixun.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:moe.Jixun.model"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=model:Global, IsDesignTimeCreatable=True}"
+        Title="梦姬中文小说下载器" Height="350" Width="525">
+    
+    <Border Style="{StaticResource WindowBorderStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <!-- 底部状态信息 -->
+            <Label Grid.Row="2" Content="{Binding StatusText}"></Label>
+
+            <!-- 上方导航 -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox DockPanel.Dock="Left" Name="TextSearchBox"></TextBox>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Button Name="BtnSearch" Click="BtnSearch_Click">搜索</Button>
+                    <Button Name="BtnOptions">设定</Button>
+                </StackPanel>
+            </Grid>
+            
+            <!-- 正中间的小说列表 -->
+            <ListView Grid.Row="1" Margin="0,10,0,0"
+                      Name="BookSearchLists"
+                      ItemsSource="{Binding SearchResults}"
+                      ItemTemplate="{StaticResource BookItem}"
+                      MouseDoubleClick="BookSearchLists_OnMouseDoubleClick">
+            </ListView>
+        </Grid>
+    </Border>
+</Window>

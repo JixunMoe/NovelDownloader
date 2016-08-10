@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JC-Novel-Downloader")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("梦姬小说下载器")]
+[assembly: AssemblyDescription("一个简单的支持插件的小说下载工具。")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JC-Novel-Downloader")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("梦姬实验室")]
+[assembly: AssemblyProduct("梦姬小说下载器")]
+[assembly: AssemblyCopyright("Copyright ©  2016 Jixun <https://jixun.moe>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

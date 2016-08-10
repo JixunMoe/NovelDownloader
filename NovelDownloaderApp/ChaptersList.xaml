@@ -1,0 +1,49 @@
+﻿<Window x:Class="moe.Jixun.ChaptersList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:moe.Jixun"
+        xmlns:model="clr-namespace:moe.Jixun.model"
+        xmlns:dummies="clr-namespace:moe.Jixun.Dummies"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=dummies:DummyBookWithChapter, IsDesignTimeCreatable=True}"
+        Height="540" Width="360">
+
+    <Window.Title>
+        <MultiBinding StringFormat="{}《{0}》 - 章节列表">
+            <Binding Path="BookMeta.Name" Mode="OneWay"></Binding>
+        </MultiBinding>
+    </Window.Title>
+
+    <Border Style="{StaticResource WindowBorderStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <ListView Name="ListChapters"
+                      KeyDown="ListChapters_OnKeyDown"
+                      KeyUp="ListChapters_OnKeyUp"
+                      ItemsSource="{Binding Chapters}"
+                      ItemTemplate="{StaticResource ChapterItemTemplate}"
+                      >
+
+            </ListView>
+
+            <DockPanel Grid.Row="1" Margin="0,10,0,0">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Button Name="BtnSelectAll">全选</Button>
+                    <Button Name="BtnSelectNone">全不选</Button>
+                    <Button Name="BtnToggleAll">全反选</Button>
+                    <Button Name="BtnToggleSelected" Click="BtnToggleSelected_OnClick">反选选中</Button>
+                </StackPanel>
+
+                <Border HorizontalAlignment="Right">
+                    <Button Name="BtnDownload" DockPanel.Dock="Right" Click="BtnDownload_Click">下载</Button>
+                </Border>
+            </DockPanel>
+        </Grid>
+    </Border>
+</Window>
