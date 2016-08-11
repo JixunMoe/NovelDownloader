@@ -1,6 +1,6 @@
 ﻿namespace moe.Jixun.Plugin
 {
-    interface IPluginProcessor: IPluginBase
+    public interface IPluginProcessor: IPluginBase
     {
     }
 }

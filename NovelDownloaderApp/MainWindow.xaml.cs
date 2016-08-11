@@ -2,6 +2,7 @@
 using System.IO;
 using System.Management.Instrumentation;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using moe.Jixun.model;
@@ -54,6 +55,9 @@ namespace moe.Jixun
                 return;
             }
 
+            _data.StatusText = "正在获取书籍信息...";
+
+
             _data.StatusText = "正在下载章节列表...";
             await book.BookMeta.DownloadChapterList();
 
@@ -62,7 +66,9 @@ namespace moe.Jixun
                 Owner = this
             };
 
-            bookDialog.ShowDialog();
+            bookDialog.Show();
+
+            _data.StatusText = "章节列表加载完成!";
         }
     }
 }

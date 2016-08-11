@@ -18,6 +18,12 @@ namespace moe.Jixun.Dummies
             AuthorId = "jixun";
         }
 
+        public DummyBookMeta(bool addChapters): this()
+        {
+            if (addChapters)
+                Chapters = new List<IBookChapter>();
+        }
+
         public IPluginProvider Plugin { get; }
         public string Name { get; }
         public string BookId { get; }
@@ -26,6 +32,8 @@ namespace moe.Jixun.Dummies
         public List<IBookChapter> Chapters { get; private set; }
         public async Task DownloadChapterList()
         {
+            await Task.Run(() => { });
+
             Chapters = new List<IBookChapter>();
             for (var i = 1; i < 15; i++)
             {
@@ -47,16 +55,15 @@ namespace moe.Jixun.Dummies
     internal class DummyBookWithChapter : BookEntity
     {
         public override string Site { get; } = "测试数据";
-        public sealed override List<ChapterEntity> Chapters { get; }
 
-
-        public DummyBookWithChapter() : base(new DummyBookMeta())
+        public DummyBookWithChapter() : base(new DummyBookMeta(true))
         {
-            Chapters = new List<ChapterEntity>();
             for (var i = 1; i < 15; i++)
             {
-                Chapters.Add(new DummyBookChapterEntity(this, $"第 {i} 章"));
+                BookMeta.Chapters.Add(new DummyBookChapter($"第 {i} 章", BookMeta));
             }
+
+            UpdateChapters();
         }
     }
 
@@ -66,24 +73,15 @@ namespace moe.Jixun.Dummies
         {
             Name = name;
             Book = book;
+            ChapId = name;
         }
 
         public string Name { get; }
+        public string ChapId { get; }
         public IBookMeta Book { get; }
-        public string Download()
+        public Task<string> DownloadChapter()
         {
             throw new System.NotImplementedException();
-        }
-    }
-
-    internal class DummyBookChapterEntity : ChapterEntity
-    {
-        private readonly BookEntity _book;
-        public DummyBookChapterEntity(BookEntity book, string name)
-        {
-            _book = book;
-
-            SetChapter(new DummyBookChapter(name, book.BookMeta));
         }
     }
 }

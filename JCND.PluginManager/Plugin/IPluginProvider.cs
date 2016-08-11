@@ -22,7 +22,7 @@ namespace moe.Jixun.Plugin
         Task<IBookMeta> GetBookMeta(string bookId);
     }
     
-    public interface IBookMeta
+    public interface IBookMeta: IPluginData
     {
         IPluginProvider Plugin { get; }
 
@@ -58,12 +58,17 @@ namespace moe.Jixun.Plugin
         Task DownloadChapterList();
     }
 
-    public interface IBookChapter
+    public interface IBookChapter: IPluginData
     {
         /// <summary>
         /// 章节名称
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// 章节 ID
+        /// </summary>
+        string ChapId { get; }
 
         /// <summary>
         /// 章节所在的书籍
@@ -74,6 +79,6 @@ namespace moe.Jixun.Plugin
         /// 下载章节并返回章节正文。
         /// </summary>
         /// <returns>章节正文</returns>
-        string Download();
+        Task<string> DownloadChapter();
     }
 }

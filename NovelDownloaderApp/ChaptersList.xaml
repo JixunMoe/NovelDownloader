@@ -24,8 +24,6 @@
             </Grid.RowDefinitions>
 
             <ListView Name="ListChapters"
-                      KeyDown="ListChapters_OnKeyDown"
-                      KeyUp="ListChapters_OnKeyUp"
                       ItemsSource="{Binding Chapters}"
                       ItemTemplate="{StaticResource ChapterItemTemplate}"
                       >
@@ -34,10 +32,10 @@
 
             <DockPanel Grid.Row="1" Margin="0,10,0,0">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <Button Name="BtnSelectAll">全选</Button>
-                    <Button Name="BtnSelectNone">全不选</Button>
-                    <Button Name="BtnToggleAll">全反选</Button>
-                    <Button Name="BtnToggleSelected" Click="BtnToggleSelected_OnClick">反选选中</Button>
+                    <Button Name="BtnSelectAll" Click="BtnSelectAll_OnClick">全选</Button>
+                    <Button Name="BtnSelectNone" Click="BtnSelectNone_OnClick">不选</Button>
+                    <Button Name="BtnToggleAll" Click="BtnToggleAll_OnClick">反选</Button>
+                    <Button Name="BtnDebugView">调试</Button>
                 </StackPanel>
 
                 <Border HorizontalAlignment="Right">

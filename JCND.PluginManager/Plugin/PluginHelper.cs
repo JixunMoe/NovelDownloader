@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using Newtonsoft.Json;
@@ -19,14 +21,15 @@ namespace moe.Jixun.Plugin
     {
         private static readonly HtmlParser Parser;
         private static readonly Encoding GbkEncoding;
+        private static readonly HtmlParserOptions ParserOptions;
 
         static PluginHelper()
         {
-            HtmlParserOptions opts = new HtmlParserOptions
+            ParserOptions = new HtmlParserOptions
             {
                 IsScripting = false
             };
-            Parser = new HtmlParser(opts);
+            Parser = new HtmlParser(ParserOptions);
             GbkEncoding = Encoding.GetEncoding("gbk");
         }
 
@@ -35,11 +38,24 @@ namespace moe.Jixun.Plugin
         /// 解析 HTML
         /// </summary>
         /// <param name="html">从网页拉取的 HTML 文本。</param>
+        /// <param name="baseUrl">拉取的页面来源。</param>
         /// <returns>解析对象，类似 jQuery。</returns>
-        public static IHtmlDocument ParseHtml(string html)
+        public static async Task<IDocument> ParseHtml(string html, string baseUrl = null)
         {
-            return Parser.Parse(html);
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                return await Parser.ParseAsync(html);
+
+            var ctx = BrowsingContext.New();
+            return await ctx.OpenAsync(res
+                => res
+                    // 强制 UTF-8 编码
+                    // 否则页面声明了 GBK 会读不出内容。
+                    .Header("Content-Type", "text/html; charset=UTF-8")
+                    .Address(baseUrl)
+                    .Content(html)
+            );
         }
+
 
         /// <summary>
         /// 解析 JSON 字符串
@@ -149,6 +165,36 @@ namespace moe.Jixun.Plugin
 
                 return GbkEncoding.GetString(buffer, 0, actualSize);
             }
+        }
+
+        /// <summary>
+        /// 转换节点为纯文字。
+        /// </summary>
+        /// <param name="node">元素节点</param>
+        /// <param name="digChild">挖掘子元素内容</param>
+        /// <returns></returns>
+        public static string NodeToString(INode node, bool digChild = true)
+        {
+            if (node.NodeType == NodeType.Text)
+                return node.TextContent;
+
+            if (node.NodeType == NodeType.Element)
+            {
+                var tag = node.NodeName.ToLowerInvariant();
+                if (tag == "br") return "\n";
+                if (tag == "p") return node.TextContent;
+
+                if (digChild)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var child in node.ChildNodes)
+                    {
+                        sb.Append(NodeToString(child, false));
+                    }
+                    return sb.ToString();
+                }
+            }
+            return string.Empty;
         }
 
         /// <summary>

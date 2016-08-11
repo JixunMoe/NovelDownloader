@@ -131,8 +131,10 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ChapterItemTemplate" DataType="model:ChapterEntity">
-            <CheckBox IsChecked="{Binding Checked, Mode = TwoWay}"
-                      Content="{Binding Chapter.Name}" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Checked}" />
+                <TextBlock VerticalAlignment="Center" Text="{Binding Chapter.Name}" />
+            </StackPanel>
         </DataTemplate>
     </Application.Resources>
 </Application>

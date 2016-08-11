@@ -43,4 +43,12 @@
         /// </summary>
         Exporter
     }
+
+    /// <summary>
+    /// 插件传递的数据基类
+    /// </summary>
+    public interface IPluginData
+    {
+        
+    }
 }

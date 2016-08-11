@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Plugin.PiaoTian")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("飘天文学站源插件")]
+[assembly: AssemblyDescription("提供飘天文学网站的搜索与下载支持。")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Plugin.PiaoTian")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("梦姬实验室")]
+[assembly: AssemblyProduct("梦姬小说下载器插件")]
+[assembly: AssemblyCopyright("Copyright ©  2016 Jixun <https://jixun.moe>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

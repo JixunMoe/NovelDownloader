@@ -85,6 +85,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="model\SelectOptionAnswer.cs" />
+    <Compile Include="SelectOptionWindow.xaml.cs">
+      <DependentUpon>SelectOptionWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="ChaptersList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +109,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SelectOptionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="model\BookEntity.cs" />

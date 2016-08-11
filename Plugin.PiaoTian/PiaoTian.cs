@@ -26,6 +26,7 @@ namespace moe.jixun.Plugin.PiaoTian
         private const string BaseUrl = "http://piaotian.net/";
         private const string SearchUrl = "http://piaotian.net/s.php";
         private const string ChapterUrl = "http://www.piaotian.net/html/{0}/{1}/index.html";
+        private const string ChapterUrlMobile = "http://piaotian.net/html/{0}/{1}/index.html";
         public async Task<List<IBookMeta>> SearchBook(string bookName)
         {
             var data = new Dictionary<string, string>();
@@ -38,14 +39,14 @@ namespace moe.jixun.Plugin.PiaoTian
             data["s"] = bookName;
 
             var html = await H.RequestGbkAsync(SearchUrl, data: data);
-            var doc = H.ParseHtml(html);
+            var doc = await H.ParseHtml(html, SearchUrl);
             return doc.QuerySelectorAll(".cover > p.line")
-                .Select(line => line.GetElementsByTagName("a"))
+                .Select(line => line.GetElementsByTagName("a").OfType<IHtmlAnchorElement>().ToArray())
                 .Where(line => line.Length == 3)
                 .Select(links =>
                 {
-                    var title = (IHtmlAnchorElement) links[1];
-                    var author = (IHtmlAnchorElement) links[2];
+                    var title = links[1];
+                    var author = links[2];
 
                     return (IBookMeta)new PiaoTianBook(
                         title.TextContent, title.Href,
@@ -75,14 +76,18 @@ namespace moe.jixun.Plugin.PiaoTian
                 : id.Substring(0, id.Length - 3);
 
             var chaptersUrl = string.Format(ChapterUrl, prefixId, id);
+            // var chaptersUrlMob = string.Format(ChapterUrlMobile, prefixId, id);
             var data = await H.RequestGbkAsync(chaptersUrl);
-            var doc = H.ParseHtml(data);
+            
+            // 使用手机版的地址
+            var doc = await H.ParseHtml(data, chaptersUrl);
 
             book.Chapters.Clear();
             book.Chapters.AddRange(doc
                 .QuerySelectorAll(".centent > ul a")
                 .Skip(4)
-                .Select(chapter => new PiaoTianChapter(book, chapter.TextContent))
+                .OfType<IHtmlAnchorElement>()
+                .Select(chapter => new PiaoTianChapter(book, chapter.TextContent, chapter.Href))
                 .ToList());
         }
     }
@@ -114,18 +119,27 @@ namespace moe.jixun.Plugin.PiaoTian
     public class PiaoTianChapter : IBookChapter
     {
         private readonly PiaoTianBook _book;
-        public PiaoTianChapter(PiaoTianBook book, string name)
+        public PiaoTianChapter(PiaoTianBook book, string name, string chapId)
         {
             _book = book;
             Name = name;
+            ChapId = chapId;
         }
 
         public string Name { get; }
+        public string ChapId { get; }
         public IBookMeta Book => _book;
 
-        public string Download()
+        public async Task<string> DownloadChapter()
         {
-            throw new System.NotImplementedException();
+            var chapterStr = await H.RequestGbkAsync(ChapId);
+            chapterStr = chapterStr.Replace("GetFont();", "</script><div id='content'><script>");
+            var doc = await H.ParseHtml(chapterStr);
+            var content = doc.GetElementById("content");
+            var elements = content.QuerySelectorAll("h1,div,table");
+            foreach (var element in elements)
+                element.ParentElement.RemoveChild(element);
+            return H.NodeToString(content).Trim();
         }
     }
 }
