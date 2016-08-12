@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TXT 导出插件")]
-[assembly: AssemblyDescription("提供将下载章节合并为 TXT 文件的一个插件。")]
+[assembly: AssemblyTitle("起点中文网 - 站源插件")]
+[assembly: AssemblyDescription("提供起点中文网的搜索与下载支持。")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("梦姬实验室")]
 [assembly: AssemblyProduct("梦姬小说下载器插件")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("455ed835-e928-4419-98a2-3f98084cc339")]
+[assembly: Guid("32edd431-505f-46fc-9c11-2f8c528efc60")]
 
 // Version information for an assembly consists of the following four values:
 //

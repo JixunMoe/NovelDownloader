@@ -56,6 +56,8 @@ namespace moe.Jixun.Plugin
                 return false;
             }
 
+            _app.SetStatusText($"载入了 {_plugins.Count} 个插件。");
+
             return true;
         }
 

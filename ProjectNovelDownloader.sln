@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovelDownloader.PluginManag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.TxtExport", "Plugin.TxtExport\Plugin.TxtExport.csproj", "{455ED835-E928-4419-98A2-3F98084CC339}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Qidian", "Plugin.Qidian\Plugin.Qidian.csproj", "{32EDD431-505F-46FC-9C11-2F8C528EFC60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{455ED835-E928-4419-98A2-3F98084CC339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{455ED835-E928-4419-98A2-3F98084CC339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{455ED835-E928-4419-98A2-3F98084CC339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32EDD431-505F-46FC-9C11-2F8C528EFC60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32EDD431-505F-46FC-9C11-2F8C528EFC60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32EDD431-505F-46FC-9C11-2F8C528EFC60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32EDD431-505F-46FC-9C11-2F8C528EFC60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,15 +21,13 @@ namespace moe.Jixun.Plugin
     {
         private static readonly HtmlParser Parser;
         private static readonly Encoding GbkEncoding;
-        private static readonly HtmlParserOptions ParserOptions;
 
         static PluginHelper()
         {
-            ParserOptions = new HtmlParserOptions
+            Parser = new HtmlParser(new HtmlParserOptions
             {
                 IsScripting = false
-            };
-            Parser = new HtmlParser(ParserOptions);
+            });
             GbkEncoding = Encoding.GetEncoding("gbk");
         }
 
@@ -81,9 +79,9 @@ namespace moe.Jixun.Plugin
             HttpContent data = null,
             HttpMessageHandler handler = null)
         {
-            if (handler == null) handler = new DefaultGetHandler();
+            if (handler == null) handler = new DefaultPluginClientHandler();
             var client = new HttpClient(handler);
-            url = BuildGbkQueryString(url, query);
+            url = BuildQueryString(url, query, Encoding.UTF8);
 
             if (data == null)
             {
@@ -114,9 +112,12 @@ namespace moe.Jixun.Plugin
             Dictionary<string, string> data  = null,
             NameValueCollection headers = null)
         {
-            url = BuildGbkQueryString(url, query);
+            url = BuildQueryString(url, query, GbkEncoding);
             var req = (HttpWebRequest)WebRequest.Create(url);
-            
+
+            req.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip, deflate");
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
             if (data == null)
             {
                 req.Method = "GET";
@@ -124,7 +125,7 @@ namespace moe.Jixun.Plugin
             }
             else
             {
-                var postStr = GbkDictParamToQueryString(data);
+                var postStr = DictParamToQueryString(data, GbkEncoding);
                 Debug.WriteLine($"POST(GBK) to {url} with {postStr}");
                 var postBin = Encoding.UTF8.GetBytes(postStr);
                 req.Method = "POST";
@@ -182,7 +183,7 @@ namespace moe.Jixun.Plugin
             {
                 var tag = node.NodeName.ToLowerInvariant();
                 if (tag == "br") return "\n";
-                if (tag == "p") return node.TextContent;
+                if (tag == "p") return "\n" + node.TextContent;
 
                 if (digChild)
                 {
@@ -202,8 +203,9 @@ namespace moe.Jixun.Plugin
         /// </summary>
         /// <param name="url">原始地址</param>
         /// <param name="query">请求参数</param>
+        /// <param name="encoding">编码</param>
         /// <returns>新的访问地址</returns>
-        private static string BuildGbkQueryString(string url, Dictionary<string, string> query)
+        private static string BuildQueryString(string url, Dictionary<string, string> query, Encoding encoding)
         {
             if (query != null)
             {
@@ -216,7 +218,7 @@ namespace moe.Jixun.Plugin
                     url += "?";
                 }
 
-                url += GbkDictParamToQueryString(query);
+                url += DictParamToQueryString(query, encoding);
             }
             return url;
         }
@@ -225,24 +227,35 @@ namespace moe.Jixun.Plugin
         /// 编码 QueryString
         /// </summary>
         /// <param name="data">原始数据</param>
+        /// <param name="encoding">编码</param>
         /// <returns>QueryString</returns>
-        private static string GbkDictParamToQueryString(Dictionary<string, string> data)
+        private static string DictParamToQueryString(Dictionary<string, string> data, Encoding encoding)
         {
             var paramsList = new List<string>(data.Count);
 
             paramsList.AddRange(data.Select(param =>
-                HttpUtility.UrlEncode(param.Key, GbkEncoding) + "="
-                + HttpUtility.UrlEncode(param.Value, GbkEncoding)));
+                HttpUtility.UrlEncode(param.Key, encoding) + "="
+                + HttpUtility.UrlEncode(param.Value, encoding)));
 
             return string.Join("&", paramsList);
         }
     }
 
-    internal class DefaultGetHandler : HttpClientHandler
+    public class DefaultPluginClientHandler : HttpClientHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.Add("UserAgent", "JCND 1.0 (.Net)");
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            if (request.Headers.All(kv => kv.Key != "Referer"))
+                request.Headers.Add("Referer", request.RequestUri.AbsoluteUri);
+
+            if (request.Headers.All(kv => kv.Key != "User-Agent"))
+                request.Headers.Add("User-Agent", "JCND 1.0 (.Net)");
+
+            if (request.Headers.All(kv => kv.Key != "Accept"))
+                request.Headers.Add("Accept", "*/*");
+
             return base.SendAsync(request, cancellationToken);
         }
     }

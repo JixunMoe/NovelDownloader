@@ -46,7 +46,7 @@ namespace moe.jixun.Plugin.TxtExport
                 filename = SaveDialog.FileName;
             }
 
-            using (var stream = File.Open(filename, FileMode.Create))
+            using (var stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
             {
                 var book = chapters[0].Book;
@@ -57,7 +57,7 @@ namespace moe.jixun.Plugin.TxtExport
 
                 foreach (var chapter in chapters)
                 {
-                    await writer.WriteAsync($"\n\n章节: {chapter.Name}\n");
+                    await writer.WriteAsync($"\n\n章节: {chapter.Name}\n\n");
                     var chapterStr = await chapter.DownloadChapter();
                     await writer.WriteAsync(chapterStr);
                 }

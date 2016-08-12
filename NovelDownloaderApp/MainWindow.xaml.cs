@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Management.Instrumentation;
 using System.Reflection;
@@ -58,8 +59,15 @@ namespace moe.Jixun
             _data.StatusText = "正在获取书籍信息...";
 
 
-            _data.StatusText = "正在下载章节列表...";
-            await book.BookMeta.DownloadChapterList();
+            _data.StatusText = $"正在下载 {book.BookMeta.Name} 章节列表...";
+            try
+            {
+                await book.BookMeta.DownloadChapterList();
+            }
+            catch (Exception ex)
+            {
+                _data.StatusText = $"{book.BookMeta.Name} 的章节列表获取失败!";
+            }
 
             var bookDialog = new ChaptersList(book)
             {

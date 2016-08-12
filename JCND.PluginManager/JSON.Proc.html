@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<p><textarea id="src"></textarea></p>
+	<p><button id="proc">处理</button></p>
+	<p><textarea id="out"></textarea></p>
+
+<script type="text/javascript">
+/* jshint esnext: true */
+	var btnProc = document.getElementById('proc');
+	var txtSrc  = document.getElementById('src');
+	var txtOut  = document.getElementById('out');
+
+
+	btnProc.onclick = function () {
+		var src = txtSrc.value;
+		txtOut.value = src.replace(/public [\w<>]+ (\w+) { get; set; }/g, (z, variable) => {
+			return `[JsonProperty(PropertyName = "${variable}")]\n${ z }\n`;
+		});
+	};
+</script>
+
+</body>
+</html>
